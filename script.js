@@ -127,6 +127,24 @@ allSections.forEach(function (section) {
   section.classList.add('section--hidden');
 });
 
+//////////////////////////////////////////////////
+// LAZY LOADING IMAGES
+const imgTargets = document.querySelector('img[data-src]');
+
+const loading = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loading, {
+  root: null,
+  threshold: 0,
+});
+imgTargets.forEach(img => sectionObserver.observe(img));
 /////////////////////////////////////////////////
 // Sticky nav
 // const initialCoords = section1.getBoundingClientRect();
