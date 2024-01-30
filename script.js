@@ -129,22 +129,27 @@ allSections.forEach(function (section) {
 
 //////////////////////////////////////////////////
 // LAZY LOADING IMAGES
-const imgTargets = document.querySelector('img[data-src]');
+const imgTargets = document.querySelectorAll('img[data-src]');
 
-const loading = function (entries, observer) {
+const loadImg = function (entries, observer) {
   const [entry] = entries;
-  console.log(entry);
   if (!entry.isIntersecting) return;
-
   // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
   observer.unobserve(entry.target);
 };
 
-const imgObserver = new IntersectionObserver(loading, {
+const imgObserver = new IntersectionObserver(loadImg, {
   root: null,
   threshold: 0,
+  rootMargin: `200px`,
 });
-imgTargets.forEach(img => sectionObserver.observe(img));
+
+imgTargets.forEach(img => imgObserver.observe(img));
+
 /////////////////////////////////////////////////
 // Sticky nav
 // const initialCoords = section1.getBoundingClientRect();
